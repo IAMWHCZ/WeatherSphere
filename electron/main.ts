@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, screen, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -27,8 +27,16 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, 
 let win: BrowserWindow | null
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    width,
+    height,
+    x: 0,
+    y: 0,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
     },
@@ -42,9 +50,17 @@ function createWindow() {
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
-    // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
+
+  win.setIgnoreMouseEvents(true, { forward: true })
+
+  ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
+    win?.setIgnoreMouseEvents(ignore, options)
+  })
+
+  
+
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

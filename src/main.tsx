@@ -1,12 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
+import './assets/main.css'
+import {Draggable} from '@/components/Draggable';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    my first react app
+    <Draggable />
   </React.StrictMode>,
-)
+);
 
 // Use contextBridge
 window.ipcRenderer.on('main-process-message', (_event, message) => {
