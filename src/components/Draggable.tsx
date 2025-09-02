@@ -34,7 +34,6 @@ export const Draggable: React.FC = () => {
           setIsExpanded(prev => !prev);
         }
         dragInfo.current.isDragging = false;
-        // After the drag is finished, make the window click-through again.
         window.ipcRenderer.send('set-ignore-mouse-events', true, { forward: true });
       }
     };
@@ -48,14 +47,6 @@ export const Draggable: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isExpanded) {
-      window.ipcRenderer.send('resize-window', 100, 300);
-    } else {
-      window.ipcRenderer.send('resize-window', 150, 150);
-    }
-  }, [isExpanded]);
-
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     dragInfo.current = {
       isDragging: true,
@@ -65,7 +56,6 @@ export const Draggable: React.FC = () => {
       offsetX: e.clientX - position.x,
       offsetY: e.clientY - position.y,
     };
-    // When the drag starts, immediately make the window interactive.
     window.ipcRenderer.send('set-ignore-mouse-events', false);
   };
 
@@ -78,17 +68,20 @@ export const Draggable: React.FC = () => {
         cursor: 'grab',
         width: '100px',
         height: isExpanded ? '300px' : '100px',
+        backgroundColor: isExpanded ? 'white' : 'lightblue',
+        borderRadius: isExpanded ? '10px' : '50%',
+        transition: 'all 0.3s ease',
+        padding: isExpanded ? '10px' : '0',
+        boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'black',
+        overflow: 'hidden',
       }}
       onMouseDown={handleMouseDown}
     >
-      <div style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'lightblue',
-        borderRadius: isExpanded ? '10px' : '50%',
-        transition: 'all 0.3s ease',
-        pointerEvents: 'none',
-      }} />
+      {isExpanded ? 'Expanded Content' : null}
     </div>
   );
 };

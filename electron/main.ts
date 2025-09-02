@@ -2,8 +2,7 @@ import { app, BrowserWindow, screen, ipcMain } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-
-const require = createRequire(import.meta.url)
+createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // The built directory structure
@@ -55,7 +54,7 @@ function createWindow() {
 
   win.setIgnoreMouseEvents(true, { forward: true })
 
-  ipcMain.on('set-ignore-mouse-events', (event, ignore, options) => {
+  ipcMain.on('set-ignore-mouse-events', (_event, ignore, options) => {
     win?.setIgnoreMouseEvents(ignore, options)
   })
 

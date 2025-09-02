@@ -34,7 +34,7 @@ function createWindow() {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
   win.setIgnoreMouseEvents(true, { forward: true });
-  ipcMain.on("set-ignore-mouse-events", (event, ignore, options) => {
+  ipcMain.on("set-ignore-mouse-events", (_event, ignore, options) => {
     win == null ? void 0 : win.setIgnoreMouseEvents(ignore, options);
   });
 }
